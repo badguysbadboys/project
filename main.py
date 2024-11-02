@@ -1,13 +1,17 @@
-from dataclasses import dataclass
-from typing import Optional
+import dataclasses
 from enum import Enum
+from uuid import uuid4
+
+database = []
 
 class Sex(Enum):
     Male = 0
     Female = 1
 
-@dataclass
+@dataclasses.dataclass
 class Human:
+    id: str = dataclasses.field(default_factory=lambda: uuid4().hex, init=False)
+
     lastName: str
     firstName: str
 
@@ -21,14 +25,17 @@ class Human:
     middleName: str = str()
 
     def __post_init__(self) -> None:
-        for fieldName, fieldType in self.__annotations__.items():
+        for field in dataclasses.fields(self):
+            fieldName = field.name
+            fieldType = field.type
+
             fieldValue = self.__dict__[fieldName]
 
             if not isinstance(fieldValue, fieldType):
-                raise TypeError(f'"{fieldName}": expected type {fieldType} but received {type(fieldValue)}')
+                raise TypeError(f'"{fieldName}" expected type {fieldType} but received {type(fieldValue)}')
 
 def main() -> None:
-    ...
+    pass
 
 if __name__ == "__main__":
     main()
